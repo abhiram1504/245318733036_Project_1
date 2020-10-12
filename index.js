@@ -19,7 +19,7 @@ const url='mongodb://127.0.0.1:27017';
 const dbName='hospitalInventory';
 let db
 
-MongoClient.connect(url,{useUnifiedToology:true},(err,client)=>{
+MongoClient.connect(url,{ useUnifiedTopology: true },(err,client)=>{
     if(err) return console.log(err);
     db=client.db(dbName);
     console.log(`Connected Database:${url}`);
@@ -50,15 +50,15 @@ app.post('/searchventilatorbystatus',middleware.checkToken,(req,res)=>{
 
 //SEARCH VENTILATORS BY hospital name
 app.post('/searchventilatorbyname',middleware.checkToken,(req,res)=>{
-    var name=req.query.name;
+    var name=req.body.name;
     console.log(name);
     var ventilatordetails=db.collection('ventilators')
-    .find({'name':new RegExp(name,'i')}).toArray().then(result=>res.json(result));
+    .find({'name':req.body.name}).toArray().then(result=>res.json(result));
 });
 
 //SEARCH HOSPITAL BY name
 app.post('/searchhospitalbyname',middleware.checkToken,(req,res)=>{
-    var name=req.query.name;
+    var name=req.body.name;
     console.log(name);
     var hospitaldetails=db.collection('hospital')
     .find({'name':new RegExp(name,'i')}).toArray().then(result=>res.json(result));
@@ -94,7 +94,7 @@ app.post('/addventilatorbyuser',middleware.checkToken,(req,res)=>{
 
 //DELETE VENTILATOR BY ventilatorId
 app.delete('/delete',middleware.checkToken,(req,res)=>{
-    var myquery=req.query.ventilatorId;
+    var myquery=req.body.ventilatorId;
     console.log(myquery);
 
     var myquery1={ventilatorId:myquery};
